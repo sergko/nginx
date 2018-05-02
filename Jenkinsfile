@@ -38,7 +38,7 @@ pipeline {
 --maintainer=sergey.kovbyk@gmail.com \
 --pkgname=nginx-opswork \
 --pkgrelease=${BUILD_NUMBER}'
-          sh 'mv -f ./nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb nginx-opswork.deb'
+          sh 'mv -f ./nginx-opswork_SKOWDM3ZHFUNC2JGBA4SHL4B47JT4P7Y4B47QWMT4FAIM7XUR3JQ-${BUILD_NUMBER}_amd64.deb nginx-opswork.deb'
 }
     }
     stage('Dokerize') {

@@ -3,14 +3,14 @@ pipeline {
   stages {
     stage('BuildDeb') {
       steps {
-          sh 'test -d './modules' || mkdir modules'
+          sh 'test -d "./modules" || mkdir modules'
           sh 'cd modules'
-          sh 'test -f './v0.3.0.tar.gz' || wget https://github.com/simplresty/ngx_devel_kit/archive/v0.3.0.tar.gz'
-          sh 'test -f './v0.10.12.tar.gz' || wget https://github.com/openresty/lua-nginx-module/archive/v0.10.12.tar.gz'
-          sh 'test -d './ngx_devel_kit-0.3.0' || tar -xf v0.3.0.tar.gz'
-          sh 'test -d './lua-nginx-module-0.10.12' || tar -xf v0.10.12.tar.gz'
+          sh 'test -f "./v0.3.0.tar.gz" || wget https://github.com/simplresty/ngx_devel_kit/archive/v0.3.0.tar.gz'
+          sh 'test -f "./v0.10.12.tar.gz" || wget https://github.com/openresty/lua-nginx-module/archive/v0.10.12.tar.gz'
+          sh 'test -d "./ngx_devel_kit-0.3.0" || tar -xf v0.3.0.tar.gz'
+          sh 'test -d "./lua-nginx-module-0.10.12" || tar -xf v0.10.12.tar.gz'
           sh 'cd ..'
-          sh 'test -f './configure' || mv ./auto/configure .'
+          sh 'test -f "./configure" || mv ./auto/configure .'
           sh 'make clean'
           sh './configure \
 --prefix=/etc/nginx                   \
@@ -48,7 +48,7 @@ pipeline {
     stage('Dokerize') {
       steps {
         sh 'docker build -t opswork/nginx:1.14.0-${BUILD_NUMBER} -t opswork/nginx:latest .'
-        withCredentials([usernamePassword(credentialsId: 'dockerHub_skovb', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+        withCredentials([usernamePassword(credentialsId: "dockerHub_skovb", passwordVariable: "dockerHubPassword", usernameVariable: "dockerHubUser")]) {
           sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
           sh "docker tag opswork/nginx:latest sergko/opsworks_nginx_luamod"
           sh 'docker push sergko/opsworks_nginx_luamod'

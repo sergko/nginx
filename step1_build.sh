@@ -63,7 +63,7 @@ make clean
 #mv ./docs/html/index.html ./docs/html/index.html_orig
 #mv index.html ./docs/html/index.html
 mv ./docs/html/index.html ./docs/html/index.html_orig
-cp ../assets/html/index.html ./docs/html/index.html
+cp ./assets/html/index.html ./docs/html/index.html
 
 ##/etc/nginx/nginx.conf
 #PATHgit="assets"
@@ -78,7 +78,7 @@ cp ../assets/html/index.html ./docs/html/index.html
 #mv ./conf/nginx.conf ./conf/nginx.conf_oring
 #mv nginx.conf ./conf/nginx.conf
 mv ./conf/nginx.conf ./conf/nginx.conf_oring
-cp ../assets/nginx.conf ./conf/nginx.conf
+cp ./assets/nginx.conf ./conf/nginx.conf
 
 #/etc/init.d/nginx
 #PATHgit="opsworks/nginx/release"
@@ -107,5 +107,6 @@ checkinstall -D -y --install=no -d2 \
 #cp -f nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb nginx-opswork.deb
 #ln -sf nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb /tmp/nginx-opswork.deb
 #ln -sf nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb ../nginx-opswork.deb
-cd ..
-cp -f ./$ngrelPATH/nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb nginx-opswork.deb
+#cd ..
+#cp -f ./$ngrelPATH/nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb nginx-opswork.deb
+mv -f ./nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb nginx-opswork.deb

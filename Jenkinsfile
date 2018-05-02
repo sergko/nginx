@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Deploy2AWS') {
       steps {
-           sh 'ssh -i "/var/lib/jenkins/.ssh/aws/sergeykovbyktest.pem" \
+           sh 'ssh -i "/var/lib/jenkins/.ssh/aws/sergeykovbyktest.pem" -o StrictHostKeyChecking=No \
              -tt ec2-user@ec2-35-176-150-135.eu-west-2.compute.amazonaws.com \
              "docker pull sergko/opsworks_nginx_luamod \
              && docker kill $(docker ps -aq)"'

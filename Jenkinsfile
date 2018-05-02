@@ -1,7 +1,7 @@
 pipeline {
   agent any
   stages {
-   stage('BuildDeb') {
+    stage('BuildDeb') {
       steps {
           sh 'test -f "./v0.3.0.tar.gz" || wget https://github.com/simplresty/ngx_devel_kit/archive/v0.3.0.tar.gz'
           sh 'test -f "./v0.10.12.tar.gz" || wget https://github.com/openresty/lua-nginx-module/archive/v0.10.12.tar.gz'
@@ -34,27 +34,29 @@ pipeline {
           sh 'cp ./assets/nginx.conf ./conf/nginx.conf'
           sh 'make'
           sh 'checkinstall -D -y --install=no -d2 \
---fstrans=yes \
---maintainer=sergey.kovbyk@gmail.com \
---pkgname=nginx-opswork \
---pkgversion=1.14.0 \
---pkgrelease=${BUILD_NUMBER}'
+             --fstrans=yes \
+             --maintainer=sergey.kovbyk@gmail.com \
+             --pkgname=nginx-opswork \
+             --pkgversion=1.14.0 \
+             --pkgrelease=${BUILD_NUMBER}'
           sh 'mv -f ./nginx-opswork_1.14.0-${BUILD_NUMBER}_amd64.deb nginx-opswork.deb'
 }
     }
     stage('Dokerize') {
       steps {
         sh 'docker build -t opswork/nginx:1.14.0-${BUILD_NUMBER} -t opswork/nginx:latest .'
-        sh 'docker kill $(docker ps -q | grep nginx) && docker run -it -p 8888:8888 opswork/nginx:latest &'
+        sh 'docker kill $(docker ps -aq) || exit 0'
+        sh 'docker run -it -d -p 8888:8888 opswork/nginx:latest'
         sh 'sleep 5s'
         sh 'if [ `curl localhost:8888 | grep  -c "by Sergey Kovbyk"` -gt 1 ]; \
             then echo "nginx customized by SergKo" && exit 0; else echo "smth goes wrong :( " && exit 1; fi '
-        sh 'docker kill --signal=SIGHUP opswork/nginx:latest'
+        sh 'docker kill --signal=SIGHUP opswork/nginx:latest || exit 0'
         withCredentials([usernamePassword(credentialsId: 'dockerHub_skovb', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
           sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-          sh "docker tag opswork/nginx:latest sergko/opsworks_nginx_luamod"
-          sh "docker tag opswork/nginx:1.14.0-${BUILD_NUMBER} sergko/opsworks_nginx_luamod"
-          sh 'docker push sergko/opsworks_nginx_luamod'
+          sh "docker tag opswork/nginx:latest sergko/opsworks_nginx_luamod:latest"
+          sh 'docker push sergko/opsworks_nginx_luamod:latest'
+          sh "docker tag opswork/nginx:1.14.0-${BUILD_NUMBER} sergko/opsworks_nginx_luamod:1.14.0-${BUILD_NUMBER}"
+          sh 'docker push sergko/opsworks_nginx_luamod:1.14.0-${BUILD_NUMBER}'
         }
       }
     }

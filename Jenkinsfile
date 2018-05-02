@@ -50,7 +50,7 @@ pipeline {
         sh 'sleep 5s'
         sh 'if [ `curl localhost:8888 | grep  -c "by Sergey Kovbyk"` -gt 1 ]; \
             then echo "nginx customized by SergKo" && exit 0; else echo "smth goes wrong :( " && exit 1; fi '
-        sh 'docker kill --signal=SIGHUP opswork/nginx:latest'
+        sh 'docker kill --signal=SIGHUP opswork/nginx:latest || exit 0'
         withCredentials([usernamePassword(credentialsId: 'dockerHub_skovb', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
           sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
           sh "docker tag opswork/nginx:latest sergko/opsworks_nginx_luamod:latest"

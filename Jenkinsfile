@@ -3,13 +3,10 @@ pipeline {
   stages {
     stage('BuildDeb') {
       steps {
-          sh 'test -d "./modules" || mkdir modules'
-          sh 'cd modules'
           sh 'test -f "./v0.3.0.tar.gz" || wget https://github.com/simplresty/ngx_devel_kit/archive/v0.3.0.tar.gz'
           sh 'test -f "./v0.10.12.tar.gz" || wget https://github.com/openresty/lua-nginx-module/archive/v0.10.12.tar.gz'
           sh 'test -d "./ngx_devel_kit-0.3.0" || tar -xf v0.3.0.tar.gz'
           sh 'test -d "./lua-nginx-module-0.10.12" || tar -xf v0.10.12.tar.gz'
-          sh 'cd ..'
           sh 'test -f "./configure" || mv ./auto/configure .'
           sh './configure \
 --prefix=/etc/nginx                   \
@@ -26,8 +23,8 @@ pipeline {
 --http-scgi-temp-path=/var/lib/nginx/scgi_temp \
 --user=www-data \
 --group=www-data \
---add-module=./modules/ngx_devel_kit-0.3.0 \
---add-module=./modules/lua-nginx-module-0.10.12 \
+--add-module=./ngx_devel_kit-0.3.0 \
+--add-module=./lua-nginx-module-0.10.12 \
 --modules-path=/usr/lib/nginx/modules \
 --with-debug \
 --with-threads'

@@ -11,7 +11,6 @@ pipeline {
           sh 'test -d "./lua-nginx-module-0.10.12" || tar -xf v0.10.12.tar.gz'
           sh 'cd ..'
           sh 'test -f "./configure" || mv ./auto/configure .'
-          sh 'make clean'
           sh './configure \
 --prefix=/etc/nginx                   \
 --sbin-path=/usr/sbin/nginx           \

@@ -54,7 +54,7 @@ pipeline {
         }
       }
     }
-    stage('Deploy2AWS') {
+    stage('Deploy2AWS- docker-machine') {
       steps {
              sh 'eval $(docker-machine env skovbyk) \
              && docker pull sergko/opsworks_nginx_luamod \

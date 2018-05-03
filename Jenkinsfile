@@ -59,7 +59,8 @@ pipeline {
            sh 'ssh -i "/var/lib/jenkins/.ssh/aws/sergeykovbyktest.pem" -o StrictHostKeyChecking=No \
              -tt ec2-user@ec2-35-176-150-135.eu-west-2.compute.amazonaws.com \
              "docker pull sergko/opsworks_nginx_luamod \
-             && sudo docker stop $(docker ps -af sergko/opsworks_nginx_luamod:latest) ; docker run -it -d -p 8888:8888 sergko/opsworks_nginx_luamod:latest"'
+              && docker stop nginxsk && docker rm nginxsk \
+              && docker run -itd --name=nginxsk -p 8888:8888 sergko/opsworks_nginx_luamod:latest"'
       }
     }
   }
